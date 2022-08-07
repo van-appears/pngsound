@@ -1,0 +1,27 @@
+{
+  "name": "pngsound",
+  "version": "0.0.1",
+  "description": "Convert png to sound",
+  "main": "index.js",
+  "keywords": [
+    "generated",
+    "wav"
+  ],
+  "scripts": {
+    "prettier": "prettier --write src/**"
+  },
+  "author": "Van Appears",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/van-appears/pngsound/issues"
+  },
+  "homepage": "https://github.com/van-appears/pngsound#readme",
+  "dependencies": {
+    "color-convert": "^2.0.1",
+    "node-wav": "0.0.2",
+    "pngjs": "^6.0.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}
