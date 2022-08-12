@@ -10,15 +10,14 @@ module.exports = function (control) {
   const { width, height } = img;
   const pos = (x, y) => (Math.floor(y) * width + Math.floor(x)) << 2;
 
-  let y = startRow;
-  const loops = wrap ? Math.floor(height / rows) : 1;
+  const loops = wrap ? Math.floor((height - startRow) / rows) : 1;
   const data = new Array(rows);
   for (let row = 0; row < rows; row++) {
-    const rowData = (data[y] = new Array(width * loops));
+    const rowData = (data[row] = new Array(width * loops));
     let counter = 0;
     for (let loop = 0; loop < loops; loop++) {
       for (let x = 0; x < width; x++) {
-        const y = loop * rows + row;
+        const y = startRow + row + loop * rows;
         const idx = pos(x, y);
         const r = img.data[idx];
         const g = img.data[idx + 1];
