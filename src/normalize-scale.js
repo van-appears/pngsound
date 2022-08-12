@@ -12,7 +12,6 @@ module.exports = sound => {
     const scale = 1.0 / max;
     for (let channel = 0; channel < 2; channel++) {
       for (let frame = 0; frame < frames; frame++) {
-        const val = data[channel][frame];
         data[channel][frame] *= scale;
       }
     }

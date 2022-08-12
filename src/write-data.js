@@ -7,5 +7,5 @@ module.exports = (data, control) => {
     sampleRate: SAMPLE_RATE,
     bitDepth: 16
   });
-  fs.writeFileSync("test.wav", buffer); // TODO
+  fs.writeFileSync(control.outputFile, buffer);
 };

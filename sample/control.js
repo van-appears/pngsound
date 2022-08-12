@@ -6,13 +6,15 @@ module.exports = [
     rows: 20,
     startRow: 0,
     wrap: false,
-    frequency: "r",
-    frequencyMin: "TODO",
-    frequencyMax: "TODO",
-    amplitude: "g",
-    stereoPosition: "b",
+    changeRatio: 0.666,
+    offsetRatio: 0.666,
+    frequency: "h",
+    frequencyMin: 110,
+    frequencyMax: 880,
+    amplitude: "v",
+    stereoPosition: "row",
     oscillator: "sine",
-    lowPassCutoff: "h",
-    lowPassResonance: "s"
+    lowPassCutoff: null,
+    lowPassResonance: null
   }
 ];

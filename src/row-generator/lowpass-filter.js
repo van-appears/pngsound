@@ -1,8 +1,17 @@
-const { SAMPLE_RADIAN, TWO_PI } = require("../constants");
+const { SAMPLE_RATE } = require("../constants");
 
-module.exports = ({ freq = 0, res = 0.707, values }) => {
-  const freqFn = asRangeFn(freq);
-  const resFn = asRangeFn(res);
+module.exports = function (control) {
+  const { oscillator, lowPassCutoff, lowPassResonance } = control;
+
+  // if we
+  if (
+    oscillator === "sine" ||
+    lowPassCutoff === null ||
+    lowPassResonance == null
+  ) {
+    return val => val;
+  }
+
   let y1 = 0,
     y2 = 0,
     y3 = 0,
@@ -11,20 +20,15 @@ module.exports = ({ freq = 0, res = 0.707, values }) => {
     oldy1 = 0,
     oldy2 = 0,
     oldy3 = 0;
-  let last = 0;
 
-  return val => {
-    const cutoff = freqFn();
-    const resonance = resFn();
-    const input = val || values();
-
-    const f = (cutoff + cutoff) / 44100.0;
+  return (val, cutoff, resonance) => {
+    const f = (cutoff + cutoff) / SAMPLE_RATE;
     const p = f * (1.8 - 0.8 * f);
     const k = p + p - 1.0;
     const t = (1.0 - p) * 1.386249;
     const t2 = 12.0 + t * t;
     const r = (resonance * (t2 + 6.0 * t)) / (t2 - 6.0 * t);
-    const x = input - r * y4;
+    const x = val - r * y4;
 
     y1 = x * p + oldx * p - k * y1;
     y2 = y1 * p + oldy1 * p - k * y2;
@@ -36,7 +40,6 @@ module.exports = ({ freq = 0, res = 0.707, values }) => {
     oldy1 = y1;
     oldy2 = y2;
     oldy3 = y3;
-    last = y4;
 
     return y4;
   };

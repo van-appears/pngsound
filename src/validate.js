@@ -1,28 +1,53 @@
+const fields = {
+  inputFile: "string",
+  outputFile: "string",
+  duration: "number",
+  rows: "number",
+  startRow: "number",
+  wrap: "boolean",
+  changeRatio: "number",
+  offsetRatio: "number",
+  frequency: "attribute",
+  frequencyMin: "number",
+  frequencyMax: "number",
+  amplitude: "attribute",
+  stereoPosition: "attribute",
+  oscillator: "oscillator",
+  lowPassCutoff: "attribute",
+  lowPassResonance: "attribute"
+};
+
+const oscillators = ["sawtooth", "sine", "square", "triangle"];
+const colourAttributes = ["h", "s", "v", "r", "g", "b", "x", "y", "row"];
+
+const validators = {
+  string: val => val.trim().length > 0,
+  number: val => val > 0,
+  boolean: () => true,
+  attribute: val =>
+    typeof val === "number" ||
+    typeof val === "function" ||
+    (typeof val === "string" && colourAttributes.includes(val)),
+  oscillator: val => oscillators.includes(val)
+};
+
 module.exports = function (controls) {
   const errors = [];
-  const strCheck = val => val && typeof val !== 'string' && val.trim().length === 0;
-  const numCheck = val => val && typeof val === 'number' && val > 0;
-  const oscillators = ['sawtooth', 'sine', 'square', 'triangle'];
-
-  for (let index=0; index<controls.length; index++) {
+  for (let index = 0; index < controls.length; index++) {
     const control = controls[index];
-    const prefix = `control[${index}]`
+    const prefix = `control[${index}]`;
 
-    if (!strCheck(control.inputFile)) {
-      errors.push(prefix + '.inputFile is a required string (file path)');
-    }
-    if (!strCheck(control.inputFile)) {
-      errors.push(prefix + '.outputFile is a required string (file path)');
-    }
-    if (!numCheck(control.duration)) {
-      errors.push(prefix + '.duration is a required number (in seconds)');
-    }
-    if (!strCheck(control.oscillator)) {
-      errors.push(prefix + '.oscillator is a required string');
-    }
-    if (!oscillators.includes(control.oscillator)) {
-      errors.push(prefix + '.oscillator must be one of ' + JSON.stringify(oscillators));
-    }
+    // TODO mandatory fields
+
+    Object.keys(control).forEach(key => {
+      const val = control[key];
+      const type = fields[key];
+      if (!type) {
+        errors.push(prefix + "." + key + " is an unknown property");
+      } else if (val && !validators[type](val)) {
+        errors.push(prefix + "." + key + " is not a valid " + type);
+      }
+    });
   }
 
   if (errors.length) {

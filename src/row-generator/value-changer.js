@@ -1,9 +1,11 @@
-module.exports = function (attribute, framesPerCol, scaler = val => val) {
-  const changeCount = Math.floor(framesPerCol * 2 / 3);
+module.exports = function (attribute, changeCount, scaler = val => val) {
   let currentValue, nextValue, valueChange, counter;
 
-  // if the control attribute is a number, then just use that as a constant
-  if (typeof attribute === "number") {
+  if (
+    attribute === null ||
+    attribute === undefined ||
+    typeof attribute === "number"
+  ) {
     return () => () => attribute;
   }
 

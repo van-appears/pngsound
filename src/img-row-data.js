@@ -33,9 +33,18 @@ module.exports = function (control) {
           h: h / 360,
           s: s / 100,
           v: v / 100,
-          x,
-          y,
-          row
+          row: row / (rows - 1),
+          raw: {
+            r,
+            g,
+            b,
+            h,
+            s,
+            v,
+            row,
+            x,
+            y
+          }
         };
       }
     }
