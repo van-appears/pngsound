@@ -28,7 +28,8 @@ const validators = {
     typeof val === "number" ||
     typeof val === "function" ||
     (typeof val === "string" && colourAttributes.includes(val)),
-  oscillator: val => oscillators.includes(val)
+  oscillator: val => typeof val === "function" ||
+    (typeof val === "string" && oscillators.includes(val))
 };
 
 module.exports = function (controls) {

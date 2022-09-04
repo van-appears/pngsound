@@ -8,7 +8,7 @@
     "wav"
   ],
   "scripts": {
-    "prettier": "prettier --write src/**"
+    "prettier": "prettier --write src/** sample/control.js"
   },
   "author": "Van Appears",
   "license": "MIT",

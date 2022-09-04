@@ -1,13 +1,13 @@
 const fs = require("fs");
 const PNG = require("pngjs").PNG;
 const convert = require("color-convert");
-const { ROWS } = require("./constants");
 
 module.exports = function (control) {
-  const { inputFile, rows = ROWS, wrap = false, startRow = 0 } = control;
+  const { inputFile, wrap = false, startRow = 0 } = control;
   const imgData = fs.readFileSync(inputFile);
   const img = PNG.sync.read(imgData);
   const { width, height } = img;
+  const rows = control.rows || height;
   const pos = (x, y) => (Math.floor(y) * width + Math.floor(x)) << 2;
 
   const loops = wrap ? Math.floor((height - startRow) / rows) : 1;

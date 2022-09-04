@@ -1,4 +1,5 @@
-out/*.png
+sample/*.png
+sample/*.wav
 **/.DS_Store
 
 # Logs
