@@ -1,6 +1,7 @@
 module.exports = function (attribute, changeCount, scaler = val => val) {
   let currentValue, nextValue, valueChange, counter;
 
+  // number attributes
   if (
     attribute === null ||
     attribute === undefined ||
@@ -9,14 +10,36 @@ module.exports = function (attribute, changeCount, scaler = val => val) {
     return () => () => attribute;
   }
 
-  const useMapFn = typeof attribute === "function";
+  // function attributes
+  if (typeof attribute === "function") {
+    return imgData => {
+      if (currentValue === undefined) {
+        currentValue = nextValue = attribute(imgData);
+      } else {
+        currentValue = nextValue;
+        nextValue = attribute(imgData);
+        valueChange = (nextValue - currentValue) / changeCount;
+        counter = changeCount;
+      }
+
+      return () => {
+        if (counter > 0) {
+          currentValue += valueChange;
+          counter--;
+          return currentValue;
+        }
+        return nextValue;
+      };
+    };
+  }
+
+  // value attributes
   return imgData => {
     if (currentValue === undefined) {
-      nextValue = useMapFn ? attribute(imgData) : imgData[attribute];
-      currentValue = nextValue;
+      currentValue = nextValue = imgData[attribute];
     } else {
       currentValue = nextValue;
-      nextValue = useMapFn ? attribute(imgData) : imgData[attribute];
+      nextValue = imgData[attribute];
       valueChange = (nextValue - currentValue) / changeCount;
       counter = changeCount;
     }

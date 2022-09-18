@@ -10,11 +10,16 @@ const fields = {
   frequency: "attribute",
   frequencyMin: "number",
   frequencyMax: "number",
+  frequencyChangeRatio: "number",
   amplitude: "attribute",
+  amplitudeChangeRatio: "number",
   stereoPosition: "attribute",
-  oscillator: "oscillator",
+  stereoPositionChangeRatio: "number",
   lowPassCutoff: "attribute",
-  lowPassResonance: "attribute"
+  lowPassCutoffChangeRatio: "attribute",
+  lowPassResonance: "attribute",
+  lowPassResonanceChangeRatio: "attribute",
+  oscillator: "oscillator"
 };
 
 const oscillators = ["sawtooth", "sine", "square", "triangle"];

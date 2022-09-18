@@ -20,10 +20,9 @@ This program reads a png image and effectively uses it as a score, where a row i
 
 
 
-
-TODO allow different frequency range for low pass
-TODO allow 'shifting' oscillator (equivalent to changeRatio)
-TODO allow changeRatios per sound attribute?
-TODO allow changeRatios to be function controlled rather than constant?
-TODO allow multiple workers
-TODO docs
+* BUG no output with 1 row?
+* TODO allow 'shifting' oscillator (equivalent to changeRatio)
+* TODO allow changeRatios to be function controlled rather than constant?
+* TODO allow multiple workers
+* TODO finish docs
+* TODO allow initialising amplitude at 0
