@@ -1,4 +1,4 @@
-const oscillators = require("./oscillators");
+const oscillators = require("../oscillators");
 
 module.exports = function (attribute) {
   const matchOscillator = name => oscillators[name] || oscillators.sine;

@@ -1,47 +1,19 @@
-const {
-  TWO_PI,
-  CHANGE_RATIO_DEFAULT,
-  OFFSET_RATIO_DEFAULT,
-  SAMPLE_RADIAN
-} = require("../constants");
-const valueChanger = require("./value-changer");
+const { TWO_PI, OFFSET_RATIO_DEFAULT, SAMPLE_RADIAN } = require("../constants");
 const oscillatorChanger = require("./oscillator-changer");
-const frequencyScaler = require("./frequency-scaler");
-const stereoScaler = require("./stereo-scaler");
 const lowpassFilter = require("./lowpass-filter");
-
-const def = (val, alt) => (val === null || val === undefined ? alt : val);
+const changerBuilder = require("./changer-builder");
+const { defaultValue } = require("../tools");
 
 module.exports = function (control, row, offset) {
-
-  const { frames, changeRatio, offsetRatio } = control;
+  const { frames, offsetRatio } = control;
   const framesPerCol = frames / row.length;
-  const changeCount = attr => def(control[attr], def(changeRatio, CHANGE_RATIO_DEFAULT)) * framesPerCol;
-
   const oscillatorChange = oscillatorChanger(control.oscillator);
-  const amplitudeChanger = valueChanger(
-    control.amplitude,
-    changeCount(control.amplitudeChangeRatio)
-  );
-  const resonanceChanger = valueChanger(
-    control.lowPassResonance,
-    changeCount(control.lowPassResonanceChangeRatio)
-  );
-  const frequencyChanger = valueChanger(
-    control.frequency,
-    changeCount(control.frequencyChangeRatio),
-    frequencyScaler(control.frequencyMin, control.frequencyMax)
-  );
-  const stereoChanger = valueChanger(
-    control.stereoPosition,
-    changeCount(control.stereoPositionChangeRatio),
-    stereoScaler()
-  );
-  const cutoffChanger = valueChanger(
-    control.lowPassCutoff,
-    changeCount(control.lowPassCutoffChangeRatio),
-    frequencyScaler(control.lowPassCutoffMin, control.lowPassCutoffMax)
-  );
+  const attributeChanger = changerBuilder(control, framesPerCol);
+  const amplitudeChanger = attributeChanger("amplitude");
+  const resonanceChanger = attributeChanger("resonance");
+  const frequencyChanger = attributeChanger("frequency");
+  const stereoChanger = attributeChanger("stereoPosition");
+  const cutoffChanger = attributeChanger("cutoff");
 
   let colIndex = 0;
   let radian = 0;
@@ -53,7 +25,7 @@ module.exports = function (control, row, offset) {
   let radFn = oscillatorChange(row[0]);
   let filter = lowpassFilter(control);
   let frameCounter =
-    -framesPerCol * offset * def(offsetRatio, OFFSET_RATIO_DEFAULT);
+    -framesPerCol * offset * defaultValue(offsetRatio, OFFSET_RATIO_DEFAULT);
 
   return function () {
     const leftScale = stereo();
