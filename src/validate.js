@@ -1,65 +1,107 @@
-const fields = {
-  inputFile: "string",
-  outputFile: "string",
-  duration: "number",
-  rows: "number",
-  startRow: "number",
-  wrap: "boolean",
-  changeRatio: "number",
-  offsetRatio: "number",
-  frequency: "attribute",
-  frequencyMin: "number",
-  frequencyMax: "number",
-  frequencyChangeRatio: "number",
-  amplitude: "attribute",
-  amplitudeChangeRatio: "number",
-  stereoPosition: "attribute",
-  stereoPositionChangeRatio: "number",
-  lowPassCutoff: "attribute",
-  lowPassCutoffChangeRatio: "attribute",
-  lowPassResonance: "attribute",
-  lowPassResonanceChangeRatio: "attribute",
-  oscillator: "oscillator"
-};
-
 const oscillators = ["sawtooth", "sine", "square", "triangle"];
-const colourAttributes = ["h", "s", "v", "r", "g", "b", "x", "y", "row"];
+const attributes = ["h", "s", "v", "r", "g", "b", "x", "y", "row"];
+const scale = ["linear", "exponential"];
+const builderAttributes = [
+  "frequency",
+  "amplitude",
+  "stereoPosition",
+  "lowPassCutoff",
+  "lowPassResonance"
+];
 
-const validators = {
-  string: val => val.trim().length > 0,
-  number: val => val > 0,
-  boolean: () => true,
-  attribute: val =>
-    typeof val === "number" ||
-    typeof val === "function" ||
-    (typeof val === "string" && colourAttributes.includes(val)),
-  oscillator: val => typeof val === "function" ||
-    (typeof val === "string" && oscillators.includes(val))
+const fields = {
+  inputFile: ["string"],
+  outputFile: ["string"],
+  duration: ["number"],
+  rows: ["number"],
+  startRow: ["number", "undefined"],
+  wrap: ["boolean", "undefined"],
+  changeRatio: ["number"],
+  offsetRatio: ["number"],
+  oscillator: ["oscillators", "undefined"]
 };
+
+builderAttributes.forEach(attr => {
+  fields[attr] = ["attributes", "number", "function"];
+  fields[`${attr}Min`] = ["number"];
+  fields[`${attr}Max`] = ["number"];
+  fields[`${attr}Scale`] = ["scale", "undefined"];
+  fields[`${attr}ChangeRatio`] = ["number", "undefined"];
+});
+
+fields.stereoPosition.push("undefined");
+fields.lowPassCutoff.push("undefined");
+fields.lowPassResonance.push("undefined");
 
 module.exports = function (controls) {
   const errors = [];
+  const warnings = [];
   for (let index = 0; index < controls.length; index++) {
     const control = controls[index];
     const prefix = `control[${index}]`;
 
-    // TODO mandatory fields
-
-    Object.keys(control).forEach(key => {
+    Object.keys(fields).forEach(key => {
       const val = control[key];
-      const type = fields[key];
-      if (!type) {
+      const types = fields[key];
+      const type = typeof val;
+
+      if (!types) {
         errors.push(prefix + "." + key + " is an unknown property");
-      } else if (val && !validators[type](val)) {
-        errors.push(prefix + "." + key + " is not a valid " + type);
+      } else {
+        if (
+          ((val === undefined || val === null) &&
+            types.includes("undefined")) ||
+          (type === "number" && types.includes("number")) ||
+          (type === "boolean" && types.includes("boolean")) ||
+          (type === "function" && types.includes("function")) ||
+          (type === "string" && types.includes("string"))
+        ) {
+          // then it's fine!
+        } else if (
+          type === "string" &&
+          types.includes("oscillators") &&
+          !oscillators.includes(val)
+        ) {
+          errors.push(
+            `${prefix}.${key} string should be one of ${oscillators}`
+          );
+        } else if (
+          type === "string" &&
+          types.includes("attributes") &&
+          !attributes.includes(val)
+        ) {
+          errors.push(`${prefix}.${key} string should be one of ${attributes}`);
+        } else if (
+          type === "string" &&
+          types.includes("scale") &&
+          !scale.includes(val)
+        ) {
+          errors.push(`${prefix}.${key} string should be one of ${scale}`);
+        } else {
+          const parent = builderAttributes.find(x => key.startsWith(x));
+          if (parent) {
+            const parentType = typeof control[parent];
+            if (
+              parentType !== "string" &&
+              !(val === null || val === undefined)
+            ) {
+              console.log(key, val);
+              warnings.push(
+                `${prefix}.${key} is unnecessary if ${parent} is: ${parentType}`
+              );
+            }
+          } else {
+            errors.push(prefix + "." + key + " should be one of " + types);
+          }
+        }
       }
     });
   }
 
-  if (errors.length) {
-    errors.forEach(e => console.log(e));
-    return false;
+  errors.forEach(e => console.log(e));
+  if (errors.length && warnings.length) {
+    console.log();
   }
-
-  return true;
+  warnings.forEach(w => console.log(w));
+  return !errors.length;
 };

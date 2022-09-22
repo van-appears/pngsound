@@ -6,7 +6,7 @@ module.exports = {
   TWO_PI: Math.PI * 2.0,
   ATTRIBUTE_DEFAULTS: {
     changeRatio: 0.666,
-    frequencyScale: 'exponential',
+    frequencyScale: "exponential",
     stereoPosition: 0.5,
     stereoPositionMin: 0.25,
     stereoPositionMax: 0.75

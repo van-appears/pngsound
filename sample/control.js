@@ -72,15 +72,15 @@ module.exports = [
     frequency: ({ h, row }) => {
       switch (Math.floor(h * 5)) {
         case 0:
-          return 440 + (row / 10);
+          return 440 + row / 10;
         case 1:
-          return 495 + (row / 10);
+          return 495 + row / 10;
         case 2:
-          return 556.875 + (row / 10);
+          return 556.875 + row / 10;
         case 3:
-          return 660 + (row / 10);
+          return 660 + row / 10;
         case 4:
-          return 742.5 + (row / 10);
+          return 742.5 + row / 10;
       }
     },
     amplitude: "v",
