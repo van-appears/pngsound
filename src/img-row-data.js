@@ -25,7 +25,7 @@ module.exports = function (control) {
         const [h, s, v] = convert.rgb.hsv.raw(r, g, b);
 
         // normalize all image data as 0->1
-        rowData[counter++] = {
+        rowData[counter] = {
           r: r / 255,
           g: g / 255,
           b: b / 255,
@@ -33,6 +33,7 @@ module.exports = function (control) {
           s: s / 100,
           v: v / 100,
           row: row / (rows - 1),
+          col: counter / (rowData.length - 1),
           raw: {
             r,
             g,
@@ -41,10 +42,13 @@ module.exports = function (control) {
             s,
             v,
             row,
+            col: counter,
             x,
             y
           }
         };
+
+        counter++;
       }
     }
   }

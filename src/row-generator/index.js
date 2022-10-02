@@ -4,7 +4,7 @@ const lowpassFilter = require("./lowpass-filter");
 const changerBuilder = require("./changer-builder");
 const { defaultValue } = require("../tools");
 
-module.exports = function (control, row, offset) {
+module.exports = function (control, row, offset, index) {
   const { frames, offsetRatio } = control;
   const framesPerCol = frames / row.length;
   const oscillatorChange = oscillatorChanger(control.oscillator);
@@ -35,13 +35,13 @@ module.exports = function (control, row, offset) {
 
     if (frameCounter++ >= framesPerCol) {
       colIndex++;
+      frameCounter -= framesPerCol;
       frequency = frequencyChanger(row[colIndex]);
       amplitude = amplitudeChanger(row[colIndex]);
       stereo = stereoChanger(row[colIndex]);
       cutoff = cutoffChanger(row[colIndex]);
       resonance = resonanceChanger(row[colIndex]);
       radFn = oscillatorChange(row[colIndex]);
-      frameCounter -= framesPerCol;
     }
 
     return values;

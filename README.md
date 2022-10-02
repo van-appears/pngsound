@@ -25,5 +25,3 @@ This program reads a png image and effectively uses it as a score, where a row i
 * TODO allow changeRatios to be function controlled rather than constant?
 * TODO allow multiple workers
 * TODO finish docs
-* TODO allow initialising amplitude at 0
-* TODO allow fade out also?

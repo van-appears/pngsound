@@ -1,7 +1,8 @@
 const imgRowData = require("./img-row-data");
 const soundData = require("./sound-data");
 const rowGenerator = require("./row-generator");
-const normalizeScale = require("./normalize-scale");
+const applyFades = require("./post-process/apply-fades");
+const normalizeScale = require("./post-process/normalize-scale");
 const writeData = require("./write-data");
 
 module.exports = function (control) {
@@ -9,7 +10,7 @@ module.exports = function (control) {
   const outputData = soundData(control);
   control.frames = outputData.frames;
   const rowGenerators = inputData.map((row, index) =>
-    rowGenerator(control, row, index / inputData.length)
+    rowGenerator(control, row, index / inputData.length, index)
   );
 
   for (let index = 0; index < outputData.frames; index++) {
@@ -27,6 +28,7 @@ module.exports = function (control) {
     outputData.data[1][index] = values[1];
   }
 
+  applyFades(outputData, control);
   normalizeScale(outputData);
   writeData(outputData.data, control);
 };

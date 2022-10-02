@@ -1,3 +1,4 @@
+const constants = require("./constants");
 const oscillators = ["sawtooth", "sine", "square", "triangle"];
 const attributes = ["h", "s", "v", "r", "g", "b", "x", "y", "row"];
 const scale = ["linear", "exponential"];
@@ -18,7 +19,9 @@ const fields = {
   wrap: ["boolean", "undefined"],
   changeRatio: ["number"],
   offsetRatio: ["number"],
-  oscillator: ["oscillators", "undefined"]
+  oscillator: ["oscillators", "undefined"],
+  fadeIn: ["number", "undefined"],
+  fadeOut: ["number", "undefined"]
 };
 
 builderAttributes.forEach(attr => {
@@ -47,52 +50,56 @@ module.exports = function (controls) {
 
       if (!types) {
         errors.push(prefix + "." + key + " is an unknown property");
+      } else if (
+        (val === undefined || val === null) &&
+          types.includes("undefined")
+      ) {
+        const defaultVal = constants.ATTRIBUTE_DEFAULTS[key];
+        if (defaultVal) {
+          warnings.push(`${prefix}.${key} will default to ${defaultVal}`);
+        }
+      } else if (
+        (type === "number" && types.includes("number")) ||
+        (type === "boolean" && types.includes("boolean")) ||
+        (type === "function" && types.includes("function")) ||
+        (type === "string" && types.includes("string"))
+      ) {
+        // then it's fine!
+      } else if (
+        type === "string" &&
+        types.includes("oscillators") &&
+        !oscillators.includes(val)
+      ) {
+        errors.push(
+          `${prefix}.${key} string should be one of ${oscillators}`
+        );
+      } else if (
+        type === "string" &&
+        types.includes("attributes") &&
+        !attributes.includes(val)
+      ) {
+        errors.push(`${prefix}.${key} string should be one of ${attributes}`);
+      } else if (
+        type === "string" &&
+        types.includes("scale") &&
+        !scale.includes(val)
+      ) {
+        errors.push(`${prefix}.${key} string should be one of ${scale}`);
       } else {
-        if (
-          ((val === undefined || val === null) &&
-            types.includes("undefined")) ||
-          (type === "number" && types.includes("number")) ||
-          (type === "boolean" && types.includes("boolean")) ||
-          (type === "function" && types.includes("function")) ||
-          (type === "string" && types.includes("string"))
-        ) {
-          // then it's fine!
-        } else if (
-          type === "string" &&
-          types.includes("oscillators") &&
-          !oscillators.includes(val)
-        ) {
-          errors.push(
-            `${prefix}.${key} string should be one of ${oscillators}`
-          );
-        } else if (
-          type === "string" &&
-          types.includes("attributes") &&
-          !attributes.includes(val)
-        ) {
-          errors.push(`${prefix}.${key} string should be one of ${attributes}`);
-        } else if (
-          type === "string" &&
-          types.includes("scale") &&
-          !scale.includes(val)
-        ) {
-          errors.push(`${prefix}.${key} string should be one of ${scale}`);
-        } else {
-          const parent = builderAttributes.find(x => key.startsWith(x));
-          if (parent) {
-            const parentType = typeof control[parent];
-            if (
-              parentType !== "string" &&
-              !(val === null || val === undefined)
-            ) {
-              console.log(key, val);
-              warnings.push(
-                `${prefix}.${key} is unnecessary if ${parent} is: ${parentType}`
-              );
-            }
-          } else {
-            errors.push(prefix + "." + key + " should be one of " + types);
+        const parent = builderAttributes.find(x => key.startsWith(x));
+        if (parent) {
+          const parentType = typeof control[parent];
+          if (
+            parentType !== "string" &&
+            !(val === null || val === undefined)
+          ) {
+            console.log(key, val);
+            warnings.push(
+              `${prefix}.${key} is unnecessary if ${parent} is: ${parentType}`
+            );
           }
+        } else {
+          errors.push(prefix + "." + key + " should be one of " + types);
         }
       }
     });
