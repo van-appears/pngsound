@@ -32,7 +32,7 @@ module.exports = function (control) {
           h: h / 360,
           s: s / 100,
           v: v / 100,
-          row: row / (rows - 1),
+          row: rows === 1 ? 0.5 : row / (rows - 1),
           col: counter / (rowData.length - 1),
           raw: {
             r,

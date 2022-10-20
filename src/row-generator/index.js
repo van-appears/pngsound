@@ -10,13 +10,14 @@ module.exports = function (control, row, offset, index) {
   const oscillatorChange = oscillatorChanger(control.oscillator);
   const attributeChanger = changerBuilder(control, framesPerCol);
   const amplitudeChanger = attributeChanger("amplitude");
-  const resonanceChanger = attributeChanger("resonance");
   const frequencyChanger = attributeChanger("frequency");
   const stereoChanger = attributeChanger("stereoPosition");
-  const cutoffChanger = attributeChanger("cutoff");
+  const cutoffChanger = attributeChanger("lowPassCutoff");
+  const resonanceChanger = attributeChanger("lowPassResonance");
 
   let colIndex = 0;
   let radian = 0;
+  let multiplier = index % 2 ? 1 : -1;
   let frequency = frequencyChanger(row[0]);
   let amplitude = amplitudeChanger(row[0]);
   let stereo = stereoChanger(row[0]);
@@ -31,7 +32,7 @@ module.exports = function (control, row, offset, index) {
     const leftScale = stereo();
     const value = amplitude() * filter(radFn(radian), cutoff(), resonance());
     const values = [leftScale * value, (1.0 - leftScale) * value];
-    radian = (radian + frequency() * SAMPLE_RADIAN) % TWO_PI;
+    radian = (radian + (multiplier * frequency() * SAMPLE_RADIAN)) % TWO_PI;
 
     if (frameCounter++ >= framesPerCol) {
       colIndex++;

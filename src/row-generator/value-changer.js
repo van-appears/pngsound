@@ -1,23 +1,23 @@
-module.exports = function (attribute, changeCount, scaler = val => val) {
+module.exports = function (attributeVal, changeCount, scaler = val => val) {
   let currentValue, nextValue, valueChange, counter;
 
-  // number attributes
+  // number attributeVal
   if (
-    attribute === null ||
-    attribute === undefined ||
-    typeof attribute === "number"
+    attributeVal === null ||
+    attributeVal === undefined ||
+    typeof attributeVal === "number"
   ) {
-    return () => () => attribute;
+    return () => () => attributeVal;
   }
 
-  // function attributes
-  if (typeof attribute === "function") {
-    return imgData => {
+  // function attributeVal
+  if (typeof attributeVal === "function") {
+    return (imgData, log) => {
       if (currentValue === undefined) {
-        currentValue = nextValue = attribute(imgData);
+        currentValue = nextValue = attributeVal(imgData);
       } else {
         currentValue = nextValue;
-        nextValue = attribute(imgData);
+        nextValue = attributeVal(imgData);
         valueChange = (nextValue - currentValue) / changeCount;
         counter = changeCount;
       }
@@ -33,13 +33,13 @@ module.exports = function (attribute, changeCount, scaler = val => val) {
     };
   }
 
-  // value attributes
+  // string attributeVal
   return imgData => {
     if (currentValue === undefined) {
-      currentValue = nextValue = imgData[attribute];
+      currentValue = nextValue = imgData[attributeVal];
     } else {
       currentValue = nextValue;
-      nextValue = imgData[attribute];
+      nextValue = imgData[attributeVal];
       valueChange = (nextValue - currentValue) / changeCount;
       counter = changeCount;
     }

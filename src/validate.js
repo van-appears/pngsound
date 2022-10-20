@@ -14,7 +14,7 @@ const fields = {
   inputFile: ["string"],
   outputFile: ["string"],
   duration: ["number"],
-  rows: ["number"],
+  rows: ["number", "undefined"],
   startRow: ["number", "undefined"],
   wrap: ["boolean", "undefined"],
   changeRatio: ["number"],
@@ -67,24 +67,27 @@ module.exports = function (controls) {
         // then it's fine!
       } else if (
         type === "string" &&
-        types.includes("oscillators") &&
-        !oscillators.includes(val)
+        types.includes("oscillators")
       ) {
-        errors.push(
-          `${prefix}.${key} string should be one of ${oscillators}`
-        );
+        if (!oscillators.includes(val)) {
+          errors.push(
+            `${prefix}.${key} string should be one of ${oscillators}`
+          );
+        }
       } else if (
         type === "string" &&
-        types.includes("attributes") &&
-        !attributes.includes(val)
+        types.includes("attributes")
       ) {
-        errors.push(`${prefix}.${key} string should be one of ${attributes}`);
+        if (!attributes.includes(val)) {
+          errors.push(`${prefix}.${key} string should be one of ${attributes}`);
+        }
       } else if (
         type === "string" &&
-        types.includes("scale") &&
-        !scale.includes(val)
+        types.includes("scale")
       ) {
-        errors.push(`${prefix}.${key} string should be one of ${scale}`);
+        if (!scale.includes(val)) {
+          errors.push(`${prefix}.${key} string should be one of ${scale}`);
+        }
       } else {
         const parent = builderAttributes.find(x => key.startsWith(x));
         if (parent) {

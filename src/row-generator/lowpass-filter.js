@@ -7,7 +7,9 @@ module.exports = function (control) {
   if (
     oscillator === "sine" ||
     lowPassCutoff === null ||
-    lowPassResonance == null
+    lowPassCutoff === undefined ||
+    lowPassResonance == null ||
+    lowPassResonance === undefined
   ) {
     return val => val;
   }
