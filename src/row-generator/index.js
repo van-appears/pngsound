@@ -14,6 +14,7 @@ module.exports = function (control, row, offset, index) {
   const stereoChanger = attributeChanger("stereoPosition");
   const cutoffChanger = attributeChanger("lowPassCutoff");
   const resonanceChanger = attributeChanger("lowPassResonance");
+  const timbreChanger = attributeChanger("timbre");
 
   let colIndex = 0;
   let radian = 0;
@@ -23,6 +24,7 @@ module.exports = function (control, row, offset, index) {
   let stereo = stereoChanger(row[0]);
   let cutoff = cutoffChanger(row[0]);
   let resonance = resonanceChanger(row[0]);
+  let timbre = timbreChanger(row[0]);
   let radFn = oscillatorChange(row[0]);
   let filter = lowpassFilter(control);
   let frameCounter =
@@ -30,9 +32,10 @@ module.exports = function (control, row, offset, index) {
 
   return function () {
     const leftScale = stereo();
-    const value = amplitude() * filter(radFn(radian), cutoff(), resonance());
+    const oscValue = filter(radFn(radian, timbre()), cutoff(), resonance());
+    const value = multiplier * amplitude() * oscValue;
     const values = [leftScale * value, (1.0 - leftScale) * value];
-    radian = (radian + (multiplier * frequency() * SAMPLE_RADIAN)) % TWO_PI;
+    radian = (radian + frequency() * SAMPLE_RADIAN) % TWO_PI;
 
     if (frameCounter++ >= framesPerCol) {
       colIndex++;
@@ -42,6 +45,7 @@ module.exports = function (control, row, offset, index) {
       stereo = stereoChanger(row[colIndex]);
       cutoff = cutoffChanger(row[colIndex]);
       resonance = resonanceChanger(row[colIndex]);
+      timbre = timbreChanger(row[colIndex]);
       radFn = oscillatorChange(row[colIndex]);
     }
 

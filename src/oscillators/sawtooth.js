@@ -1,3 +1,5 @@
-module.exports = function (radian) {
-  return radian / Math.PI - 1;
+const expTimbre = require("./exp-timbre");
+
+module.exports = function (radian, timbre) {
+  return expTimbre(radian / Math.PI - 1, timbre);
 };

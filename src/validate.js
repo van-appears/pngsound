@@ -3,6 +3,7 @@ const oscillators = ["sawtooth", "sine", "square", "triangle"];
 const attributes = ["h", "s", "v", "r", "g", "b", "x", "y", "row"];
 const scale = ["linear", "exponential"];
 const builderAttributes = [
+  "timbre",
   "frequency",
   "amplitude",
   "stereoPosition",
@@ -19,7 +20,7 @@ const fields = {
   wrap: ["boolean", "undefined"],
   changeRatio: ["number"],
   offsetRatio: ["number"],
-  oscillator: ["oscillators", "undefined"],
+  oscillator: ["oscillators", "function", "undefined"],
   fadeIn: ["number", "undefined"],
   fadeOut: ["number", "undefined"]
 };
@@ -35,6 +36,7 @@ builderAttributes.forEach(attr => {
 fields.stereoPosition.push("undefined");
 fields.lowPassCutoff.push("undefined");
 fields.lowPassResonance.push("undefined");
+fields.timbre.push("undefined");
 
 module.exports = function (controls) {
   const errors = [];
@@ -52,7 +54,7 @@ module.exports = function (controls) {
         errors.push(prefix + "." + key + " is an unknown property");
       } else if (
         (val === undefined || val === null) &&
-          types.includes("undefined")
+        types.includes("undefined")
       ) {
         const defaultVal = constants.ATTRIBUTE_DEFAULTS[key];
         if (defaultVal) {
@@ -65,26 +67,17 @@ module.exports = function (controls) {
         (type === "string" && types.includes("string"))
       ) {
         // then it's fine!
-      } else if (
-        type === "string" &&
-        types.includes("oscillators")
-      ) {
+      } else if (type === "string" && types.includes("oscillators")) {
         if (!oscillators.includes(val)) {
           errors.push(
             `${prefix}.${key} string should be one of ${oscillators}`
           );
         }
-      } else if (
-        type === "string" &&
-        types.includes("attributes")
-      ) {
+      } else if (type === "string" && types.includes("attributes")) {
         if (!attributes.includes(val)) {
           errors.push(`${prefix}.${key} string should be one of ${attributes}`);
         }
-      } else if (
-        type === "string" &&
-        types.includes("scale")
-      ) {
+      } else if (type === "string" && types.includes("scale")) {
         if (!scale.includes(val)) {
           errors.push(`${prefix}.${key} string should be one of ${scale}`);
         }
@@ -92,10 +85,7 @@ module.exports = function (controls) {
         const parent = builderAttributes.find(x => key.startsWith(x));
         if (parent) {
           const parentType = typeof control[parent];
-          if (
-            parentType !== "string" &&
-            !(val === null || val === undefined)
-          ) {
+          if (parentType !== "string" && !(val === null || val === undefined)) {
             console.log(key, val);
             warnings.push(
               `${prefix}.${key} is unnecessary if ${parent} is: ${parentType}`

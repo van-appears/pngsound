@@ -1,4 +1,6 @@
 const { SAMPLE_RATE } = require("../constants");
+const MIN_CUTOFF = 20;
+const MAX_CUTOFF = 22050;
 
 module.exports = function (control) {
   const { oscillator, lowPassCutoff, lowPassResonance } = control;
@@ -24,14 +26,15 @@ module.exports = function (control) {
     oldy3 = 0;
 
   return (val, cutoff, resonance) => {
-    const f = (cutoff + cutoff) / SAMPLE_RATE;
+    const cl = Math.max(MIN_CUTOFF, Math.min(MAX_CUTOFF, cutoff));
+    const f = (cl + cl) / SAMPLE_RATE;
     const p = f * (1.8 - 0.8 * f);
     const k = p + p - 1.0;
     const t = (1.0 - p) * 1.386249;
     const t2 = 12.0 + t * t;
     const r = (resonance * (t2 + 6.0 * t)) / (t2 - 6.0 * t);
-    const x = val - r * y4;
 
+    const x = val - r * y4;
     y1 = x * p + oldx * p - k * y1;
     y2 = y1 * p + oldy1 * p - k * y2;
     y3 = y2 * p + oldy2 * p - k * y3;
