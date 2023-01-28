@@ -21,8 +21,7 @@ const fields = {
   changeRatio: ["number"],
   offsetRatio: ["number"],
   oscillator: ["oscillators", "function", "undefined"],
-  fadeIn: ["number", "undefined"],
-  fadeOut: ["number", "undefined"]
+  post: ["array", "undefined"]
 };
 
 builderAttributes.forEach(attr => {
@@ -64,7 +63,8 @@ module.exports = function (controls) {
         (type === "number" && types.includes("number")) ||
         (type === "boolean" && types.includes("boolean")) ||
         (type === "function" && types.includes("function")) ||
-        (type === "string" && types.includes("string"))
+        (type === "string" && types.includes("string")) ||
+        (Array.isArray(val) && types.includes("array"))
       ) {
         // then it's fine!
       } else if (type === "string" && types.includes("oscillators")) {

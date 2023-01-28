@@ -5,7 +5,6 @@ const MAX_CUTOFF = 22050;
 module.exports = function (control) {
   const { oscillator, lowPassCutoff, lowPassResonance } = control;
 
-  // if we
   if (
     oscillator === "sine" ||
     lowPassCutoff === null ||
