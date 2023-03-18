@@ -1,8 +1,8 @@
 const secondsAsFrames = require("../seconds-as-frames");
 
-module.exports = opts => {
+module.exports = function (opts) {
   const { fadeIn, fadeOut } = opts;
-  return sound => {
+  return function (sound) {
     const { frames, data } = sound;
 
     if (fadeIn > 0) {

@@ -1,8 +1,10 @@
 const secondsAsFrames = require("../seconds-as-frames");
 
 module.exports = function (opts) {
-  const { duration, sustain, level, swap } = opts;
+  const { duration, sustain, level, left, right } = opts;
   const echoFrames = secondsAsFrames(duration);
+  const useSustain = sustain || 1;
+  const useLevel = level || 1;
   let index = 1;
 
   return sound => {
@@ -10,14 +12,13 @@ module.exports = function (opts) {
     for (let frame = 0; frame < frames; frame++) {
       let echoValue0 = frame >= echoFrames ? data[0][frame - echoFrames] : 0;
       let echoValue1 = frame >= echoFrames ? data[1][frame - echoFrames] : 0;
-      echoValue0 *= sustain * level;
-      echoValue1 *= sustain * level;
+      echoValue0 *= useSustain * useLevel;
+      echoValue1 *= useSustain * useLevel;
 
-      if (swap) {
-        data[0][frame] += echoValue1;
-        data[1][frame] += echoValue0;
-      } else {
+      if (left) {
         data[0][frame] += echoValue0;
+      }
+      if (right) {
         data[1][frame] += echoValue1;
       }
     }

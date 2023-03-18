@@ -1,16 +1,19 @@
 const control = require("../sample/control");
 const validate = require("./validate");
 const generator = require("./generator");
+const ProgressBar = require("progress");
 
 const runIndex = index => {
   const controlItem = control[index];
   const { inputFile, outputFile } = controlItem;
-  const startTime = new Date().getTime();
-  console.log("process " + index + " starting " + inputFile);
-  generator(controlItem);
-  const endTime = new Date().getTime();
-  const time = " (" + (endTime - startTime) / 1000 + " seconds)";
-  console.log("process " + index + " finished " + outputFile + time);
+
+  generator(controlItem, (err, percent) => {
+    if (err) {
+      process.send(JSON.stringify({ err: err.message }));
+    } else {
+      process.send(JSON.stringify({ index, percent }));
+    }
+  });
 };
 
 const argIndex = parseInt(process.argv[2]);

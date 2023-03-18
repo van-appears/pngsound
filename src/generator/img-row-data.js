@@ -41,10 +41,12 @@ module.exports = function (control) {
             h,
             s,
             v,
-            row,
-            col: counter,
             x,
-            y
+            y,
+            row,
+            rows,
+            col: counter,
+            cols: rowData.length
           }
         };
 

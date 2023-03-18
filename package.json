@@ -18,8 +18,10 @@
   "homepage": "https://github.com/van-appears/pngsound#readme",
   "dependencies": {
     "color-convert": "^2.0.1",
+    "multi-progress": "^4.0.0",
     "node-wav": "0.0.2",
-    "pngjs": "^6.0.0"
+    "pngjs": "^6.0.0",
+    "progress": "^2.0.3"
   },
   "devDependencies": {
     "prettier": "^2.7.1"
