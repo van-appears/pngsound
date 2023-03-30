@@ -41,7 +41,13 @@ module.exports = function (control, callback) {
     }
   }
 
-  (control.post || []).forEach(postProcess => postProcess(outputData));
+  (control.post || [])
+    .filter(postProcess => !postProcess.afterNormalization)
+    .forEach(postProcess => postProcess(outputData));
   normalizeScale(outputData);
+  (control.post || [])
+    .filter(postProcess => postProcess.afterNormalization)
+    .forEach(postProcess => postProcess(outputData));
+
   writeData(outputData.data, control);
 };

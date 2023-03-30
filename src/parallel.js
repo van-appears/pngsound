@@ -41,6 +41,7 @@ const forkIndex = cpuIndex => {
         progressBars[cpuIndex].tick(1, {
           message: `running control[${thisIndex}]`
         });
+        overallBar.tick(1);
       }
     });
 
@@ -49,7 +50,6 @@ const forkIndex = cpuIndex => {
       progressBars[cpuIndex].update(100, {
         message: `completed control[${thisIndex}]`
       });
-      overallBar.tick(1);
       forkIndex(cpuIndex);
       checkFinished();
     });
@@ -76,7 +76,7 @@ if (validate(control)) {
     complete: "=",
     incomplete: " ",
     width: 20,
-    total: control.length
+    total: control.length * 100
   });
   overallBar.tick(0);
 
