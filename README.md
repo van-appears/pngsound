@@ -29,11 +29,7 @@ There are six attributes for each oscillator `amplitude`, `frequency`, `lowPassC
 
 | name | type | default | notes |
 | ---- | ---- | ------- | ----- |
-| `[attribute]` | `string` or `number` or `function` || If this is a string it should be one of `h` (hue), `s` (saturation), `v` (value), `r` (red), `g` (green), `b` (blue), `x` (column ratioed from 0-1), `y` (row ratioed from 0-1). Also, if a string the `[attribute]Min` and `[attribute]Max` values need to be provided
-OR
-If this is a number then the constant value will be used. In this case `[attribute]Min` and `[attribute]Max` are unnecessary
-OR
-If this is a function, the value returned by the function is used. In this case `[attribute]Min` and `[attribute]Max` are unnecessary. The object passed to the function is described below. |
+| `[attribute]` | `string` or `number` or `function` || If this is a string it should be one of `h` (hue), `s` (saturation), `v` (value), `r` (red), `g` (green), `b` (blue), `x` (column ratioed from 0-1), `y` (row ratioed from 0-1). Also, if a string the `[attribute]Min` and `[attribute]Max` values need to be provided \ OR \ If this is a number then the constant value will be used. In this case `[attribute]Min` and `[attribute]Max` are unnecessary \ OR \ If this is a function, the value returned by the function is used. In this case `[attribute]Min` and `[attribute]Max` are unnecessary. The object passed to the function is described below. |
 | `[attribute]Min` | `number` || The value to use when the attribute value is 0 |
 | `[attribute]Max` | `number` || The value to use when the attribute value is 1 |
 | `[attribute]ChangeRatio` | `number` || Like the global `changeRatio` value, but for a specific part of the oscillator control |
