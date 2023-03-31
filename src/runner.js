@@ -1,12 +1,9 @@
 const control = require("../sample/control");
 const validate = require("./validate");
 const generator = require("./generator");
-const ProgressBar = require("progress");
 
 const runIndex = index => {
   const controlItem = control[index];
-  const { inputFile, outputFile } = controlItem;
-
   generator(controlItem, (err, percent) => {
     if (err) {
       process.send(JSON.stringify({ err: err.message }));

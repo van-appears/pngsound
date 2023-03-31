@@ -36,15 +36,12 @@ module.exports = [
     timbre: "s",
     lowPassResonance: 0.833,
     amplitude: "v",
-    stereoPosition: ({ raw: { row, col } }) => (row + col) % 2 ? 0 : 1,
+    stereoPosition: ({ raw: { row, col } }) => ((row + col) % 2 ? 0 : 1),
     lowPassCutoff: sineSwirl({
       speed: 11,
       scaler: val => 60 + val * 1400
     }),
-    post: [
-      echo({ duration: 0.073, sustain: 0.2 }),
-      applyFades({ fadeOut: 5 })
-    ]
+    post: [echo({ duration: 0.073, sustain: 0.2 }), applyFades({ fadeOut: 5 })]
   },
   {
     inputFile: `sample/combined.png`,
@@ -77,10 +74,7 @@ module.exports = [
     amplitudeMin: 0.5,
     amplitudeMax: 1.0,
     stereoPosition: sineSwirl({ speed: 3 }),
-    post: [
-      applyScale(0.9),
-      applyFades({ fadeIn: 20, fadeOut: 20 })
-    ]
+    post: [applyScale(0.9), applyFades({ fadeIn: 20, fadeOut: 20 })]
   },
   {
     inputFile: `sample/combined.png`,
@@ -159,7 +153,8 @@ module.exports = [
     inputFile: `sample/combined.png`,
     outputFile: `sample/process8.wav`,
     duration: 180,
-    oscillator: ({ h }) => ["square","sawtooth","triangle","sine"][Math.floor(4 * h)],
+    oscillator: ({ h }) =>
+      ["square", "sawtooth", "triangle", "sine"][Math.floor(4 * h)],
     frequencyChangeRatio: 0.3,
     changeRatio: 1,
     offsetRatio: 1,
@@ -171,9 +166,7 @@ module.exports = [
     timbre: "b",
     amplitude: "s",
     stereoPosition: sineSwirl({ width: "v" }),
-    post: [
-      echo({ duration: 0.111, sustain: 0.9 })
-    ]
+    post: [echo({ duration: 0.111, sustain: 0.9 })]
   },
   {
     inputFile: `sample/combined.png`,
@@ -187,9 +180,7 @@ module.exports = [
     frequency: ({ raw }) => raw.r,
     amplitude: "g",
     stereoPosition: "b",
-    post: [
-      frameFunction(value => expTimbre(value, 0.5))
-    ]
+    post: [frameFunction(value => expTimbre(value, 0.5))]
   },
   {
     inputFile: `sample/combined.png`,
@@ -207,15 +198,12 @@ module.exports = [
     amplitude: "v",
     lowPassResonance: 0.707,
     lowPassCutoff: ({ col, s }) => {
-      const min = 20 + (col * 1980); // 20 -> 2000;
-      const max = 2000 - (col * 1980); // 2000 -> 20;
-      const val = min + (s * (max - min));
+      const min = 20 + col * 1980; // 20 -> 2000;
+      const max = 2000 - col * 1980; // 2000 -> 20;
+      const val = min + s * (max - min);
       return val;
     },
     stereoPosition: "row",
-    post: [
-      echo({ duration: 0.01, sustain: 0.3 }),
-      applyScale(0.9)
-    ]
+    post: [echo({ duration: 0.01, sustain: 0.3 }), applyScale(0.9)]
   }
 ];

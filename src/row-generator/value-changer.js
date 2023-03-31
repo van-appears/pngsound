@@ -12,7 +12,7 @@ module.exports = function (attributeVal, changeCount, scaler = val => val) {
 
   // function attributeVal
   if (typeof attributeVal === "function") {
-    return (imgData, log) => {
+    return imgData => {
       if (currentValue === undefined) {
         currentValue = nextValue = attributeVal(imgData);
       } else {

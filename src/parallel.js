@@ -30,7 +30,7 @@ const forkIndex = cpuIndex => {
     });
 
     runner.on("message", message => {
-      const { err, index, percent } = JSON.parse(message);
+      const { err, index } = JSON.parse(message);
       if (err) {
         errors[index] = err;
         progressBars[cpuIndex].tick(0, {

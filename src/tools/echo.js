@@ -5,7 +5,6 @@ module.exports = function (opts) {
   const echoFrames = secondsAsFrames(duration);
   const useSustain = sustain || 1;
   const useLevel = level || 1;
-  let index = 1;
 
   return sound => {
     const { frames, data } = sound;
